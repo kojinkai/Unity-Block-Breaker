@@ -13,7 +13,7 @@ public class LevelController : MonoBehaviour {
         sceneLoader = FindObjectOfType<SceneLoader>();
     }
 
-    public void CountBlocks()
+    public void AddBlockToGlobalBlockCount()
     {
         breakableBlocks++;
     }

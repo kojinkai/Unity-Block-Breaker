@@ -13,13 +13,15 @@ public class BlockController : MonoBehaviour {
     // cached references to other GameObjects
     LevelController levelController;
     GameSessionController gameSessionController;
+    SpriteRenderer spriteRenderer;
 
     // state properties
-    [SerializeField] int hitsReceived; // @TODO Serialised for debug only
+    int hitsReceived;
 
-    private void Start()
+    void Start()
     {
         gameSessionController = FindObjectOfType<GameSessionController>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
 
         if (tag == "Breakable")
         {
@@ -30,7 +32,7 @@ public class BlockController : MonoBehaviour {
     private void AddBlockToBreakableCount()
     {
         levelController = FindObjectOfType<LevelController>();
-        levelController.CountBlocks();
+        levelController.AddBlockToGlobalBlockCount();
     }
 
     private void OnCollisionEnter2D()
@@ -41,7 +43,8 @@ public class BlockController : MonoBehaviour {
         }
     }
 
-    private void HandleHit() {
+
+    protected void HandleHit() {
         int maxHits = damageSprites.Length + 1;
         hitsReceived++;
         if (hitsReceived >= maxHits) {
@@ -56,15 +59,14 @@ public class BlockController : MonoBehaviour {
     {
         int spriteIndex = hitsReceived - 1;
         if (damageSprites[spriteIndex] != null) { 
-            GetComponent<SpriteRenderer>().sprite = damageSprites[spriteIndex];
+            spriteRenderer.sprite = damageSprites[spriteIndex];
         }
         else {
             Debug.LogError("Block Sprite is missing from array");
-            Debug.Log(gameObject.name);
         }
     }
 
-    private void DestroyBlock()
+    public void DestroyBlock()
     {
         TriggerParticlesVFX();
         DestroyInUI();
